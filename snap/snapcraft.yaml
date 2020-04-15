@@ -1,0 +1,29 @@
+name: led-blink
+base: core18 
+version: '0.1' 
+
+summary: Demonstration app using Ubuntu Core and a Raspberry Pi.
+
+description: This is a small app used to demonstrate using Ubuntu Core with a Raspberry Pi.
+             led blinks at 1000ms on gpio 24 or pin 18 of raspberry pi
+
+architectures:
+  - build-on: all
+    run-on: armhf
+
+grade: devel
+
+confinement: devmode
+
+apps:
+  led-pulse:
+    daemon: simple
+    command: led-blink
+    plugs:  
+      - gpio 
+    
+
+parts:
+  led-pulse:
+    plugin: make
+    source: .
