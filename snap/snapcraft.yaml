@@ -16,7 +16,7 @@ grade: devel
 confinement: devmode
 
 apps:
-  led-pulse:
+  led-blink:
     daemon: simple
     command: led-blink
     plugs:  
@@ -24,6 +24,6 @@ apps:
     
 
 parts:
-  led-pulse:
+  led-blink:
     plugin: make
     source: .
