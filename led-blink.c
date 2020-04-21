@@ -18,22 +18,56 @@ Jeff Tranter <jtranter@ics.com>
 #include <sys/types.h>
 #include <unistd.h>
 
-int main()
-{
-    // Export the desired pin by writing to /sys/class/gpio/export
 
-    int fd = open("/sys/class/gpio/export", O_WRONLY);
+
+ int export_pin(){
+
+// Export the desired pin by writing to /sys/class/gpio/export
+ 
+     int fd = open("/sys/class/gpio/export", O_WRONLY);
+     if (fd == -1) {
+         perror("Unable to open /sys/class/gpio/export");
+         exit(1);
+     }
+
+     if (write(fd, "24", 2) != 2) {
+         perror("Error writing to /sys/class/gpio/export");
+         exit(1);
+    }
+
+   return fd;
+}
+
+
+
+ int unexport_pin(){
+    // Unexport the pin by writing to /sys/class/gpio/unexport
+    
+     int fd = open("/sys/class/gpio/unexport", O_WRONLY);
+
     if (fd == -1) {
-        perror("Unable to open /sys/class/gpio/export");
+        perror("Unable to open /sys/class/gpio/unexport");
         exit(1);
     }
 
     if (write(fd, "24", 2) != 2) {
-        perror("Error writing to /sys/class/gpio/export");
+        perror("Error writing to /sys/class/gpio/unexport");
         exit(1);
     }
+ 
+    return fd; 
+  
+}
 
-    close(fd);
+
+
+int main()
+{
+ 
+  int fd;   
+
+   //fd = export_pin();
+  //close(fd);
 
     // Set the pin to be an output by writing "out" to /sys/class/gpio/gpio24/direction
 
@@ -56,9 +90,9 @@ int main()
         exit(1);
     }
 
-    // Toggle LED 50 ms on, 50ms off, 100 times (100 seconds)
+    // Toggle LED 500 ms on and 500ms off forever
 
-    for (int i = 0; i < 100; i++) {
+      while (1) {
         if (write(fd, "1", 1) != 1) {
             perror("Error writing to /sys/class/gpio/gpio24/value");
             exit(1);       
@@ -75,20 +109,9 @@ int main()
 
     close(fd);
 
-    // Unexport the pin by writing to /sys/class/gpio/unexport
-
-    fd = open("/sys/class/gpio/unexport", O_WRONLY);
-    if (fd == -1) {
-        perror("Unable to open /sys/class/gpio/unexport");
-        exit(1);
-    }
-
-    if (write(fd, "24", 2) != 2) {
-        perror("Error writing to /sys/class/gpio/unexport");
-        exit(1);
-    }
-
-    close(fd);
+   // fd = unexport_pin();
+    
+   // close(fd);
 
     // And exit
     return 0;
