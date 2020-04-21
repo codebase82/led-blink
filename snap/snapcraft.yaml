@@ -11,12 +11,13 @@ architectures:
   - build-on: all
     run-on: armhf
 
-grade: devel
+grade: stable
 
-confinement: devmode
+confinement: strict
 
 apps:
   led-blink:
+    daemon: simple
     command: led-blink
     plugs:  
       - gpio 
